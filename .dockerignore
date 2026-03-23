@@ -1,0 +1,47 @@
+# ── Dependencias ──────────────────────
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Build anterior (si existe localmente) ──
+.next
+out
+
+# ── Variables de entorno (se inyectan vía docker-compose o Dokploy) ──
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ── Git ───────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ── IDE / Editor ──────────────────────
+.vscode
+.idea
+*.swp
+*.swo
+
+# ── SO ────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Tests (no van en imagen de producción) ──
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+coverage
+
+# ── Docker ────────────────────────────
+Dockerfile*
+docker-compose*
+.dockerignore

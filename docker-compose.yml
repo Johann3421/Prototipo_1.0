@@ -1,0 +1,52 @@
+services:
+  # ── Aplicación Next.js ─────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:-51999999999}
+        NEXT_PUBLIC_WHATSAPP_DEFAULT_MSG: ${NEXT_PUBLIC_WHATSAPP_DEFAULT_MSG:-Hola, me interesa digitalizar mi negocio. ¿Me pueden orientar?}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://techmype.pe}
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://techmype:${POSTGRES_PASSWORD:-changeme_set_in_dokploy}@postgres:5432/techmype_db
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - techmype_net
+
+  # ── PostgreSQL 16 ──────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: techmype
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_set_in_dokploy}
+      POSTGRES_DB: techmype_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U techmype -d techmype_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - techmype_net
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  techmype_net:
+    driver: bridge
