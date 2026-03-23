@@ -36,8 +36,10 @@ async function getMetrics() {
       `,
     ]);
 
-  const demoClicks = eventsByType.find((e) => e.eventType === 'DEMO_CLICK')?._count.eventType ?? 0;
-  const waClicks = eventsByType.find((e) => e.eventType === 'WHATSAPP_CLICK')?._count.eventType ?? 0;
+  type EventGroup = { eventType: string; _count: { eventType: number } };
+  const typedEventsByType = eventsByType as EventGroup[];
+  const demoClicks = typedEventsByType.find((e) => e.eventType === 'DEMO_CLICK')?._count.eventType ?? 0;
+  const waClicks = typedEventsByType.find((e) => e.eventType === 'WHATSAPP_CLICK')?._count.eventType ?? 0;
 
   return {
     totalLeads,

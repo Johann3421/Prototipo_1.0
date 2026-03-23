@@ -31,6 +31,9 @@ ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Genera el Prisma Client con los tipos TypeScript correctos
+RUN npx prisma generate
+
 RUN npm run build
 
 # ──────────────────────────────────────────────────────────────
