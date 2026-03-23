@@ -69,13 +69,23 @@ En Dokploy, dentro del servicio creado → pestaña **Environment**:
 
 | Variable | Valor de ejemplo | Obligatorio |
 |---|---|---|
-| `POSTGRES_PASSWORD` | `S3cr3t_P@ss_2024!` | ✅ |
+| `POSTGRES_PASSWORD` | `MiPass2024` | ✅ |
+| `DATABASE_URL` | `postgresql://techmype:MiPass2024@postgres:5432/techmype_db` | ✅ |
 | `ADMIN_SECRET` | _(contraseña del panel `/admin/login`)_ | ✅ |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | `51987654321` | ✅ |
 | `NEXT_PUBLIC_WHATSAPP_DEFAULT_MSG` | `Hola, me interesa digitalizar mi negocio.` | ✅ |
 | `NEXT_PUBLIC_APP_URL` | `https://techmype.pe` | ✅ |
-| `NEXT_PUBLIC_GA_ID` | `G-XXXXXXXXXX` | ⬜ opcional |
-| `APP_PORT` | `3010` | ⬜ (por defecto 3010) |
+| `NEXT_PUBLIC_GA_ID` | `G-XXXXXXXXXX` | ⛾ opcional |
+| `APP_PORT` | `3010` | ⛾ (por defecto 3010) |
+
+> ⚠️ **`DATABASE_URL` se debe configurar directamente**, no se construye automáticamente desde `POSTGRES_PASSWORD`.
+> Si la contraseña contiene caracteres especiales, usa URL-encoding:
+> `@` → `%40` | `!` → `%21` | `#` → `%23` | `$` → `%24` | `&` → `%26`
+>
+> Ejemplo con `S3cr3t_P@ss_2024!`:
+> ```
+> DATABASE_URL=postgresql://techmype:S3cr3t_P%40ss_2024%21@postgres:5432/techmype_db
+> ```
 
 ### Generar ADMIN_SECRET seguro (contraseña del panel admin)
 
@@ -229,6 +239,35 @@ Estas se **hornean** en el JavaScript del cliente durante el build de Docker:
 - Verifica que `POSTGRES_PASSWORD` sea la misma en `app` y `postgres`
 - Revisa los logs: `docker compose logs app`
 - Confirma que `postgres` pasó el healthcheck: `docker compose ps`
+
+### Authentication failed / credenciales inválidas en Prisma
+
+Esto ocurre por dos razones:
+
+**A) Caracteres especiales en la contraseña** — el `@`, `!`, `#` etc. rompen el parsing de la URL de PostgreSQL.
+Solución: usa la contraseña URL-encoded en `DATABASE_URL`:
+```bash
+# Password: S3cr3t_P@ss_2024!
+DATABASE_URL=postgresql://techmype:S3cr3t_P%40ss_2024%21@postgres:5432/techmype_db
+```
+
+**B) El volumen de postgres ya existe con una contraseña diferente** — PostgreSQL ignora `POSTGRES_PASSWORD` si los datos ya están inicializados.
+Solución: cambiar la contraseña via SQL (sin perder datos):
+```bash
+# Acceder al contenedor postgres
+docker compose -p techmype exec postgres psql -U techmype -d techmype_db
+```
+Luego dentro de psql:
+```sql
+ALTER USER techmype WITH PASSWORD 'tu_nuevo_password';
+\q
+```
+
+O si quieres un reinicio limpio (se perderán los datos):
+```bash
+docker compose -p techmype down -v   # elimina volumen
+docker compose -p techmype up -d     # recrear con nueva contraseña
+```
 
 ### El schema no se aplicó (tablas no existen)
 Esto ocurre si el volumen de PostgreSQL ya existía de un deploy anterior. Aplícalo manualmente:
