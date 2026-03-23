@@ -98,7 +98,7 @@ En PowerShell (Windows):
 1. En Dokploy, dentro del servicio → **Domains**
 2. Haz clic en **Add Domain**
 3. Ingresa tu dominio: `techmype.pe`
-4. Puerto destino: `3000`
+4. Puerto destino: `3010`
 5. Activa **HTTPS / Let's Encrypt** → Dokploy genera el certificado automáticamente
 
 > Asegúrate de que el DNS de tu dominio apunta al IP del servidor antes de activar SSL.
