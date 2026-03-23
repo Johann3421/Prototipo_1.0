@@ -105,7 +105,7 @@ export default function Footer() {
       <div className="border-t border-zinc-800">
         <div className="max-w-[1200px] mx-auto px-6 md:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-zinc-500 text-center sm:text-left">
-            © 2025 TechMYPE. Todos los derechos reservados. RUC: XXXXXXXXXX | Hecho con ❤️ en Perú
+            © 2025 TechMYPE. Todos los derechos reservados. RUC: 10719242478 | Hecho con ❤️ en Perú
           </p>
           <div className="flex gap-4 text-xs text-zinc-500">
             <a href="#" className="hover:text-zinc-300 transition-colors">

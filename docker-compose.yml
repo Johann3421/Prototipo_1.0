@@ -14,7 +14,7 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://techmype:${POSTGRES_PASSWORD:-changeme_set_in_dokploy}@postgres:5432/techmype_db
-      ADMIN_API_KEY: ${ADMIN_API_KEY:-}
+      ADMIN_SECRET: ${ADMIN_SECRET:-}
     depends_on:
       postgres:
         condition: service_healthy

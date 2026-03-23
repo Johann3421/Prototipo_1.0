@@ -1,86 +1,55 @@
 -- ============================================
--- TechMYPE — Schema PostgreSQL
+-- TechMYPE — Schema PostgreSQL (Prisma 5 compatible)
 -- ============================================
 
--- Habilitar extensión UUID
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enum types (deben coincidir exactamente con prisma/schema.prisma)
+CREATE TYPE "ServiceType" AS ENUM ('POS_VENTAS', 'ECOMMERCE', 'SAAS_MEDIDA', 'WEB_CORPORATIVA');
+CREATE TYPE "LeadSource"  AS ENUM ('ORGANIC', 'DIRECT', 'FACEBOOK_AD', 'GOOGLE_AD', 'REFERRAL');
+CREATE TYPE "LeadStatus"  AS ENUM ('NUEVO', 'CONTACTADO', 'EN_NEGOCIACION', 'CERRADO_GANADO', 'CERRADO_PERDIDO');
+CREATE TYPE "EventType"   AS ENUM ('DEMO_CLICK', 'WHATSAPP_CLICK', 'PRICING_VIEW', 'FORM_SUBMIT', 'PAGE_VIEW');
 
--- ── Tabla principal de Leads ──
-CREATE TABLE leads (
-  id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name            VARCHAR(100)    NOT NULL,
-  business_name   VARCHAR(150)    NOT NULL,
-  phone           VARCHAR(20)     NOT NULL,
-  city            VARCHAR(50)     NOT NULL,
-  service_interest VARCHAR(50)    NOT NULL
-    CHECK (service_interest IN ('pos', 'ecommerce', 'saas', 'web', 'unknown')),
-  message         TEXT,
-  source          VARCHAR(50)     DEFAULT 'landing_form'
-    CHECK (source IN ('landing_form', 'whatsapp_btn', 'pricing_cta')),
-  plan_selected   VARCHAR(50),
-  status          VARCHAR(30)     DEFAULT 'new'
-    CHECK (status IN ('new', 'contacted', 'qualified', 'converted', 'lost')),
-  utm_source      VARCHAR(100),
-  utm_medium      VARCHAR(100),
-  utm_campaign    VARCHAR(100),
-  ip_address      INET,
-  user_agent      TEXT,
-  created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- ── Admin ─────────────────────────────────────────────────────
+CREATE TABLE "Admin" (
+  "id"           TEXT         NOT NULL,
+  "email"        TEXT         NOT NULL,
+  "passwordHash" TEXT         NOT NULL,
+  "createdAt"    TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "lastLoginAt"  TIMESTAMP(3),
+  CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
 );
 
--- ── Tabla de Mensajes de Contacto ──
-CREATE TABLE contact_messages (
-  id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  lead_id     UUID REFERENCES leads(id) ON DELETE SET NULL,
-  subject     VARCHAR(200),
-  body        TEXT            NOT NULL,
-  read        BOOLEAN         DEFAULT false,
-  replied_at  TIMESTAMP WITH TIME ZONE,
-  created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+CREATE UNIQUE INDEX "Admin_email_key" ON "Admin"("email");
+
+-- ── Lead ──────────────────────────────────────────────────────
+CREATE TABLE "Lead" (
+  "id"               TEXT          NOT NULL,
+  "nombreContacto"   TEXT          NOT NULL,
+  "nombreNegocio"    TEXT          NOT NULL,
+  "telefonoWhatsApp" TEXT          NOT NULL,
+  "email"            TEXT,
+  "ciudad"           TEXT,
+  "servicioInteres"  "ServiceType" NOT NULL,
+  "origen"           "LeadSource"  NOT NULL DEFAULT 'ORGANIC',
+  "estado"           "LeadStatus"  NOT NULL DEFAULT 'NUEVO',
+  "notasAdmin"       TEXT,
+  "planSeleccionado" TEXT,
+  "createdAt"        TIMESTAMP(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt"        TIMESTAMP(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "Lead_pkey" PRIMARY KEY ("id")
 );
 
--- ── Tabla de Vistas de Página (Analytics básico) ──
-CREATE TABLE page_views (
-  id          BIGSERIAL PRIMARY KEY,
-  path        VARCHAR(200)    NOT NULL,
-  referrer    VARCHAR(500),
-  utm_source  VARCHAR(100),
-  utm_medium  VARCHAR(100),
-  utm_campaign VARCHAR(100),
-  created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+CREATE INDEX "Lead_estado_idx" ON "Lead"("estado");
+CREATE INDEX "Lead_origen_idx" ON "Lead"("origen");
+
+-- ── EventLog ──────────────────────────────────────────────────
+CREATE TABLE "EventLog" (
+  "id"        TEXT         NOT NULL,
+  "eventType" "EventType"  NOT NULL,
+  "target"    TEXT         NOT NULL,
+  "metadata"  JSONB,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "EventLog_pkey" PRIMARY KEY ("id")
 );
 
--- ── Índices de performance ──
-CREATE INDEX idx_leads_status       ON leads(status);
-CREATE INDEX idx_leads_created_at   ON leads(created_at DESC);
-CREATE INDEX idx_leads_city         ON leads(city);
-CREATE INDEX idx_leads_service      ON leads(service_interest);
-CREATE INDEX idx_leads_phone        ON leads(phone);
-
--- ── Trigger para updated_at automático ──
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_leads_updated_at
-  BEFORE UPDATE ON leads
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ── Vista útil para dashboard interno ──
-CREATE VIEW leads_summary AS
-SELECT
-  DATE(created_at)    AS date,
-  city,
-  service_interest,
-  status,
-  COUNT(*)            AS total,
-  COUNT(CASE WHEN status = 'converted' THEN 1 END) AS converted
-FROM leads
-GROUP BY DATE(created_at), city, service_interest, status
-ORDER BY date DESC;
+CREATE INDEX "EventLog_eventType_idx" ON "EventLog"("eventType");
+CREATE INDEX "EventLog_createdAt_idx" ON "EventLog"("createdAt");

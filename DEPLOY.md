@@ -70,14 +70,14 @@ En Dokploy, dentro del servicio creado → pestaña **Environment**:
 | Variable | Valor de ejemplo | Obligatorio |
 |---|---|---|
 | `POSTGRES_PASSWORD` | `S3cr3t_P@ss_2024!` | ✅ |
-| `ADMIN_API_KEY` | _(ver instrucción abajo)_ | ✅ |
+| `ADMIN_SECRET` | _(contraseña del panel `/admin/login`)_ | ✅ |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | `51987654321` | ✅ |
 | `NEXT_PUBLIC_WHATSAPP_DEFAULT_MSG` | `Hola, me interesa digitalizar mi negocio.` | ✅ |
 | `NEXT_PUBLIC_APP_URL` | `https://techmype.pe` | ✅ |
 | `NEXT_PUBLIC_GA_ID` | `G-XXXXXXXXXX` | ⬜ opcional |
 | `APP_PORT` | `3010` | ⬜ (por defecto 3010) |
 
-### Generar ADMIN_API_KEY seguro
+### Generar ADMIN_SECRET seguro (contraseña del panel admin)
 
 En cualquier terminal Linux/macOS:
 ```bash
@@ -132,9 +132,9 @@ curl -X POST https://TU_DOMINIO/api/leads \
   -H "Content-Type: application/json" \
   -d '{"name":"Test","businessName":"X","phone":"987654321","city":"Lima","serviceInterest":"web"}'
 
-# El endpoint admin devuelve leads (usa tu ADMIN_API_KEY)
-curl -H "Authorization: Bearer TU_ADMIN_API_KEY" \
-  "https://TU_DOMINIO/api/leads?page=1&limit=5"
+# Panel de administración de métricas y leads
+# URL: https://TU_DOMINIO/admin/login
+# Contraseña: el valor de ADMIN_SECRET configurado en Dokploy
 ```
 
 ---
@@ -209,7 +209,7 @@ Volume: postgres_data (datos persistentes)
 
 ### Variables de runtime (solo en el servidor, NO en el bundle)
 - `DATABASE_URL` — conexión PostgreSQL. **Nunca** incluir en el código fuente
-- `ADMIN_API_KEY` — clave para el endpoint GET `/api/leads`
+- `ADMIN_SECRET` — contraseña para el panel de administración en `/admin/login`
 - `POSTGRES_PASSWORD` — contraseña del usuario PostgreSQL
 
 ### Variables de build-time (NEXT_PUBLIC_*)
