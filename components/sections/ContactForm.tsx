@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContactFormSchema, type ContactFormType } from '@/lib/validations';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { useDemoStore } from '@/store/demoStore';
 import type { LeadApiResponse } from '@/types';
 
 const cities = ['Lima', 'Arequipa', 'Trujillo', 'Chiclayo', 'Huánuco', 'Cusco', 'Otra'] as const;
@@ -32,6 +33,14 @@ export default function ContactForm() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [submittedName, setSubmittedName] = useState('');
+  const lastTriedDemo = useDemoStore((s) => s.lastTriedDemo);
+
+  const demoLabels: Record<string, string> = {
+    pos: 'Sistema POS',
+    dashboard: 'Dashboard Empresarial',
+    catalog: 'Catálogo WhatsApp',
+    cashflow: 'Gestor de Caja',
+  };
 
   const validateField = useCallback((field: keyof ContactFormType, value: string) => {
     const partial = { ...formData, [field]: value };
@@ -88,6 +97,9 @@ export default function ContactForm() {
         body: JSON.stringify({
           ...result.data,
           source: 'landing_form',
+          message: lastTriedDemo
+            ? `[Demo probada: ${demoLabels[lastTriedDemo] ?? lastTriedDemo}] ${result.data.message ?? ''}`
+            : result.data.message,
         }),
       });
 
@@ -169,6 +181,13 @@ export default function ContactForm() {
           className="bg-[var(--bg-secondary)] rounded-2xl p-8 md:p-12 max-w-3xl mx-auto"
           noValidate
         >
+          {/* Demo tracking banner */}
+          {lastTriedDemo && (
+            <div className="mb-6 flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl px-4 py-3">
+              <span>🎮</span>
+              <span>Probaste la demo <strong>{demoLabels[lastTriedDemo]}</strong> — tu asesor sabrá exactamente qué necesitas.</span>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div className="relative">

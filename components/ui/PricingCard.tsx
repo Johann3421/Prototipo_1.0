@@ -1,8 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Check, X as XIcon } from 'lucide-react';
 import type { PlanData } from '@/types';
-import { buildWhatsAppUrl } from '@/lib/whatsapp';
 
 interface PricingCardProps {
   plan: PlanData;
@@ -16,9 +16,8 @@ export default function PricingCard({ plan, isAnnual, index }: PricingCardProps)
   const isCustom = plan.price.monthly === 0;
   const isDark = plan.highlighted;
 
-  const handleCta = () => {
-    window.open(buildWhatsAppUrl(plan.whatsappPlan), '_blank', 'noopener,noreferrer');
-  };
+  const whatsappMsg = `Hola, vengo de tu web y me interesa el ${plan.name} para mi negocio.`;
+  const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '51999999999'}?text=${encodeURIComponent(whatsappMsg)}`;
 
   return (
     <motion.div
@@ -31,6 +30,8 @@ export default function PricingCard({ plan, isAnnual, index }: PricingCardProps)
           ? 'bg-[var(--bg-dark)] text-white ring-2 ring-emerald-500 scale-[1.02]'
           : 'bg-white border border-[var(--border-default)] hover:shadow-[var(--shadow-hover)]'
         }`}
+      itemScope
+      itemType="https://schema.org/Offer"
     >
       {/* Badge */}
       {plan.badge && (
@@ -42,15 +43,15 @@ export default function PricingCard({ plan, isAnnual, index }: PricingCardProps)
       {/* Emoji & Name */}
       <div className="mb-4">
         <span className="text-3xl">{plan.emoji}</span>
-        <h3 className={`text-xl font-semibold mt-2 ${isDark ? 'text-white' : 'text-[var(--text-primary)]'}`}>
+        <h3 className={`text-2xl font-bold mt-2 ${isDark ? 'text-white' : 'text-[var(--text-primary)]'}`} itemProp="name">
           {plan.name}
         </h3>
-        <p className={`text-sm mt-1 ${isDark ? 'text-zinc-400' : 'text-[var(--text-secondary)]'}`}>
+        <p className={`text-sm mt-1 ${isDark ? 'text-zinc-400' : 'text-[var(--text-secondary)]'}`} itemProp="description">
           {plan.description}
         </p>
       </div>
 
-      {/* Price */}
+      {/* Price with Schema.org */}
       <div className="mb-6">
         {isCustom ? (
           <span className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-[var(--text-primary)]'}`}>
@@ -58,6 +59,8 @@ export default function PricingCard({ plan, isAnnual, index }: PricingCardProps)
           </span>
         ) : (
           <div className="flex items-baseline gap-1">
+            <meta itemProp="priceCurrency" content="PEN" />
+            <meta itemProp="price" content={String(price)} />
             <span className={`text-xl font-medium align-top mt-1 ${isDark ? 'text-zinc-400' : 'text-[var(--text-secondary)]'}`}>
               S/
             </span>
@@ -81,33 +84,36 @@ export default function PricingCard({ plan, isAnnual, index }: PricingCardProps)
         )}
       </div>
 
-      {/* Features */}
+      {/* Features with lucide-react icons */}
       <ul className="space-y-3 mb-8 flex-1">
         {plan.features.map((feature) => (
           <li key={feature} className={`flex items-start gap-2 text-sm ${isDark ? 'text-zinc-300' : 'text-[var(--text-primary)]'}`}>
-            <span className="text-emerald-500 mt-0.5 flex-shrink-0">✓</span>
+            <Check className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" strokeWidth={2.5} />
             {feature}
           </li>
         ))}
         {plan.notIncluded.map((feature) => (
           <li key={feature} className={`flex items-start gap-2 text-sm ${isDark ? 'text-zinc-600' : 'text-[var(--text-muted)]'}`}>
-            <span className="mt-0.5 flex-shrink-0">✗</span>
+            <XIcon className="w-4 h-4 mt-0.5 flex-shrink-0" strokeWidth={2} />
             <span className="line-through">{feature}</span>
           </li>
         ))}
       </ul>
 
-      {/* CTA */}
-      <button
-        onClick={handleCta}
-        className={`w-full py-3 px-6 rounded-xl font-semibold text-sm transition-all duration-200
+      {/* CTA → WhatsApp con mensaje pre-llenado */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Solicitar ${plan.name}`}
+        className={`w-full py-3 px-6 rounded-xl font-semibold text-sm text-center transition-all duration-200 block
           ${isDark
             ? 'bg-emerald-500 text-white hover:bg-emerald-400'
             : 'border border-emerald-600 text-emerald-600 hover:bg-emerald-50'
           }`}
       >
-        {plan.cta}
-      </button>
+        Solicitar este plan
+      </a>
     </motion.div>
   );
 }

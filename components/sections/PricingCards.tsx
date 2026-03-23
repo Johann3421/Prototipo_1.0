@@ -84,7 +84,7 @@ export default function PricingCards() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--text-primary)]">
-            Planes pensados para el bolsillo de tu negocio
+            Planes diseñados para crecer contigo
           </h2>
           <p className="text-lg md:text-xl text-[var(--text-secondary)] mt-4">
             Sin sorpresas. Precio fijo en Soles. Cancela cuando quieras.

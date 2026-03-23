@@ -1,52 +1,62 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/sections/HeroSection';
+import ProblemsSection from '@/components/sections/ProblemsSection';
 import ServicesGrid from '@/components/sections/ServicesGrid';
+import DemoHub from '@/components/sections/DemoHub';
 import SocialProof from '@/components/sections/SocialProof';
 import ProcessSection from '@/components/sections/ProcessSection';
 import PricingCards from '@/components/sections/PricingCards';
 import ContactForm from '@/components/sections/ContactForm';
 import WhatsAppFloatingBtn from '@/components/ui/WhatsAppFloatingBtn';
+import DemoModal from '@/components/ui/DemoModal';
 import Script from 'next/script';
 
 const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
+  '@type': 'ProfessionalService',
   name: 'TechMYPE',
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web, Android, iOS',
-  description: 'Software de ventas y gestión para MYPES en Perú',
+  description: 'Software de ventas, gestión y digitalización para MYPES en Perú',
   url: 'https://techmype.pe',
-  offers: [
-    {
-      '@type': 'Offer',
-      name: 'Plan Emprendedor',
-      price: '99',
-      priceCurrency: 'PEN',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        billingDuration: 'P1M',
+  telephone: '+51-999-999-999',
+  areaServed: {
+    '@type': 'Country',
+    name: 'Perú',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Lima',
+    addressCountry: 'PE',
+  },
+  priceRange: 'S/ 99 - S/ 249 /mes',
+  currenciesAccepted: 'PEN',
+  paymentAccepted: 'Yape, Plin, Transferencia bancaria',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+51-999-999-999',
+    contactType: 'customer support',
+    availableLanguage: 'Spanish',
+    areaServed: 'PE',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Planes TechMYPE',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        name: 'Plan Emprendedor',
+        price: '99',
+        priceCurrency: 'PEN',
+        description: 'Sistema POS básico para negocios que recién empiezan.',
       },
-    },
-    {
-      '@type': 'Offer',
-      name: 'Plan Negocio',
-      price: '249',
-      priceCurrency: 'PEN',
-    },
-  ],
-  provider: {
-    '@type': 'Organization',
-    name: 'TechMYPE',
-    url: 'https://techmype.pe',
-    logo: 'https://techmype.pe/logo.png',
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: '+51-999-999-999',
-      contactType: 'customer support',
-      availableLanguage: 'Spanish',
-      areaServed: 'PE',
-    },
+      {
+        '@type': 'Offer',
+        name: 'Plan Negocio',
+        price: '249',
+        priceCurrency: 'PEN',
+        description: 'POS completo + E-commerce + Facturación electrónica SUNAT.',
+      },
+    ],
   },
 };
 
@@ -61,8 +71,10 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
+        <ProblemsSection />
         <div className="border-t border-[var(--border-default)]" />
         <ServicesGrid />
+        <DemoHub />
         <SocialProof />
         <div className="border-t border-[var(--border-default)]" />
         <ProcessSection />
@@ -72,6 +84,7 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppFloatingBtn />
+      <DemoModal />
     </>
   );
 }

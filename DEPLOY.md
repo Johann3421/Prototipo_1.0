@@ -75,7 +75,7 @@ En Dokploy, dentro del servicio creado → pestaña **Environment**:
 | `NEXT_PUBLIC_WHATSAPP_DEFAULT_MSG` | `Hola, me interesa digitalizar mi negocio.` | ✅ |
 | `NEXT_PUBLIC_APP_URL` | `https://techmype.pe` | ✅ |
 | `NEXT_PUBLIC_GA_ID` | `G-XXXXXXXXXX` | ⬜ opcional |
-| `APP_PORT` | `3000` | ⬜ (por defecto 3000) |
+| `APP_PORT` | `3010` | ⬜ (por defecto 3010) |
 
 ### Generar ADMIN_API_KEY seguro
 
@@ -239,7 +239,7 @@ docker compose -p techmype exec -T postgres \
 
 ### Error 502 desde Dokploy/Traefik
 - La app puede estar aún iniciando. Espera 30s y recarga
-- Verifica que el puerto configurado en Dokploy sea `3000`
+- Verifica que el puerto configurado en Dokploy sea `3010`
 - Revisa los logs del servicio app
 
 ### El número de WhatsApp no es el correcto en producción

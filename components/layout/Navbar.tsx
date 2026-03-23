@@ -6,6 +6,7 @@ import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import type { NavItem } from '@/types';
 
 const navItems: NavItem[] = [
+  { label: 'Demos', href: '#demos' },
   { label: 'Servicios', href: '#servicios' },
   { label: 'Cómo funciona', href: '#proceso' },
   { label: 'Precios', href: '#precios' },
