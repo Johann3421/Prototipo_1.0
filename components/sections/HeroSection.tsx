@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import DashboardMockup from '@/components/ui/DashboardMockup';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { trackEvent } from '@/lib/tracking';
 
 const ease: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
@@ -58,6 +59,7 @@ export default function HeroSection() {
             >
               <a
                 href="#demos"
+                onClick={() => trackEvent('DEMO_CLICK', 'Hero_Demo_Button')}
                 className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-semibold text-base shadow-lg shadow-emerald-500/25 transition-colors duration-200"
               >
                 Probar Demo Gratis
@@ -67,6 +69,7 @@ export default function HeroSection() {
                 href={buildWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('WHATSAPP_CLICK', 'Hero_Main_Button')}
                 className="inline-flex items-center justify-center gap-2 border border-[var(--border-default)] hover:border-emerald-300 text-[var(--text-primary)] px-6 py-4 rounded-xl font-medium text-base hover:text-emerald-600 transition-all duration-200"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Tabla de Administradores (Seguridad del Panel)
+model Admin {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+}
+
+// 2. Tabla de Leads (CRM de Ventas)
+model Lead {
+  id               String      @id @default(cuid())
+  nombreContacto   String
+  nombreNegocio    String
+  telefonoWhatsApp String
+  email            String?
+  ciudad           String?
+  servicioInteres  ServiceType
+  origen           LeadSource  @default(ORGANIC)
+  estado           LeadStatus  @default(NUEVO)
+  notasAdmin       String?     @db.Text
+  planSeleccionado String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([estado])
+  @@index([origen])
+}
+
+// 3. Tabla de Analítica de Eventos (Tracking de Demos y CTAs)
+model EventLog {
+  id        String    @id @default(cuid())
+  eventType EventType
+  target    String
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+// --- ENUMS ---
+
+enum ServiceType {
+  POS_VENTAS
+  ECOMMERCE
+  SAAS_MEDIDA
+  WEB_CORPORATIVA
+}
+
+enum LeadSource {
+  ORGANIC
+  DIRECT
+  FACEBOOK_AD
+  GOOGLE_AD
+  REFERRAL
+}
+
+enum LeadStatus {
+  NUEVO
+  CONTACTADO
+  EN_NEGOCIACION
+  CERRADO_GANADO
+  CERRADO_PERDIDO
+}
+
+enum EventType {
+  DEMO_CLICK
+  WHATSAPP_CLICK
+  PRICING_VIEW
+  FORM_SUBMIT
+  PAGE_VIEW
+}

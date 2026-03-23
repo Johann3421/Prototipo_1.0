@@ -1,6 +1,7 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/sections/HeroSection';
+import AboutSection from '@/components/sections/AboutSection';
 import ProblemsSection from '@/components/sections/ProblemsSection';
 import ServicesGrid from '@/components/sections/ServicesGrid';
 import DemoHub from '@/components/sections/DemoHub';
@@ -18,14 +19,15 @@ const structuredData = {
   name: 'TechMYPE',
   description: 'Software de ventas, gestión y digitalización para MYPES en Perú',
   url: 'https://techmype.pe',
-  telephone: '+51-999-999-999',
+  telephone: '+51-970-435-903',
   areaServed: {
     '@type': 'Country',
     name: 'Perú',
   },
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Lima',
+    addressLocality: 'Huánuco',
+    addressRegion: 'Huánuco',
     addressCountry: 'PE',
   },
   priceRange: 'S/ 99 - S/ 249 /mes',
@@ -33,7 +35,7 @@ const structuredData = {
   paymentAccepted: 'Yape, Plin, Transferencia bancaria',
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+51-999-999-999',
+    telephone: '+51-970-435-903',
     contactType: 'customer support',
     availableLanguage: 'Spanish',
     areaServed: 'PE',
@@ -77,6 +79,7 @@ export default function Home() {
         <DemoHub />
         <SocialProof />
         <div className="border-t border-[var(--border-default)]" />
+        <AboutSection />
         <ProcessSection />
         <PricingCards />
         <div className="border-t border-[var(--border-default)]" />

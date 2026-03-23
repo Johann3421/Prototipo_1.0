@@ -11,15 +11,16 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://techmype.pe'),
   title: {
-    default: 'TechMYPE | Software para MYPES Perú — POS, E-commerce y Más',
+    default: 'Sistemas de Ventas y Software para MYPES en Perú | TechMYPE',
     template: '%s | TechMYPE',
   },
   description:
     'Software de ventas (POS), tiendas online y desarrollo a medida para MYPES en Perú. ' +
-    'Tecnología peruana que entiende tu negocio. Facturación electrónica SUNAT incluida.',
+    'Tecnología peruana desde Huánuco para todo el país. Facturación electrónica SUNAT incluida.',
   keywords: [
     'Software para MYPES Perú',
     'Sistema de ventas Lima',
+    'Sistema POS ferreterías Perú',
     'Desarrollo de software para pequeñas empresas',
     'Facturación electrónica Perú',
     'POS para bodegas Perú',
@@ -27,9 +28,9 @@ export const metadata: Metadata = {
     'Software punto de venta Perú',
     'E-commerce para negocios Lima',
     'Sistema de inventario pequeña empresa',
-    'Software contable MYPES Perú',
+    'Software MYPE Huánuco',
   ],
-  authors: [{ name: 'TechMYPE', url: 'https://techmype.pe' }],
+  authors: [{ name: 'Johann Abad — TechMYPE', url: 'https://techmype.pe' }],
   creator: 'TechMYPE',
   publisher: 'TechMYPE',
   openGraph: {
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     locale: 'es_PE',
     url: 'https://techmype.pe',
     siteName: 'TechMYPE',
-    title: 'Software para MYPES Perú | Digitaliza tu Negocio',
+    title: 'Sistemas de Ventas y Software para MYPES en Perú | TechMYPE',
     description:
       'Sistema POS, tienda online y software a medida. Para dueños de negocios que no tienen tiempo que perder.',
     images: [
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Software para MYPES Perú | TechMYPE',
+    title: 'Sistemas de Ventas y Software para MYPES en Perú | TechMYPE',
     description:
       'Sistema POS, tienda online y software a medida para pequeños negocios.',
     images: ['/og-image.png'],
@@ -65,10 +66,10 @@ export const metadata: Metadata = {
     canonical: 'https://techmype.pe',
   },
   other: {
-    'geo.region': 'PE',
-    'geo.placename': 'Lima, Perú',
-    'geo.position': '-12.0464;-77.0428',
-    ICBM: '-12.0464, -77.0428',
+    'geo.region': 'PE-HUC',
+    'geo.placename': 'Huánuco, Perú',
+    'geo.position': '-9.9306;-76.2422',
+    ICBM: '-9.9306, -76.2422',
   },
 };
 

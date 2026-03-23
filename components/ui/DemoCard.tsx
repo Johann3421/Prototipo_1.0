@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import type { DemoId } from '@/store/demoStore';
 import { useDemoStore } from '@/store/demoStore';
+import { trackEvent } from '@/lib/tracking';
 
 interface DemoCardProps {
   id: DemoId;
@@ -33,6 +34,11 @@ export default function DemoCard({
   index,
 }: DemoCardProps) {
   const openDemo = useDemoStore((s) => s.openDemo);
+
+  function handleOpen() {
+    trackEvent('DEMO_CLICK', id ?? 'unknown');
+    openDemo(id);
+  }
 
   return (
     <motion.article
@@ -64,7 +70,7 @@ export default function DemoCard({
 
       {/* CTA */}
       <button
-        onClick={() => openDemo(id)}
+        onClick={handleOpen}
         aria-label={`Abrir demo: ${title}`}
         className="w-full inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-800 
           text-white text-sm font-medium px-4 py-3 rounded-xl transition-colors duration-200"

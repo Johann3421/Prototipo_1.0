@@ -5,30 +5,54 @@ const serviceLinks = [
   { label: 'E-commerce', href: '#servicios' },
   { label: 'SaaS a Medida', href: '#servicios' },
   { label: 'Presencia Web', href: '#servicios' },
+  { label: 'POS para Ferreterías', href: '/landing/sistema-pos-ferreterias' },
 ];
 
 const companyLinks = [
-  { label: 'Sobre nosotros', href: '#' },
-  { label: 'Blog (próximamente)', href: '#' },
-  { label: 'Términos y privacidad', href: '#' },
+  { label: 'Sobre Nosotros', href: '/empresa' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Términos y Condiciones', href: '/terminos' },
+  { label: 'Política de Privacidad', href: '/privacidad' },
+];
+
+const navLinks = [
+  { label: 'Demos', href: '#demos' },
+  { label: 'Servicios', href: '#servicios' },
+  { label: 'Precios', href: '#precios' },
+  { label: 'Contacto', href: '#contacto' },
 ];
 
 export default function Footer() {
   return (
     <footer className="bg-[var(--bg-dark)] text-zinc-400">
       <div className="max-w-[1200px] mx-auto px-6 md:px-8 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Logo & Description */}
-          <div>
+          <div className="lg:col-span-2">
             <a href="#" className="flex items-center gap-2 text-lg font-bold text-white mb-3">
               <span className="w-7 h-7 bg-emerald-600 rounded-md flex items-center justify-center">
                 <span className="text-white text-xs font-bold">T</span>
               </span>
               TechMYPE
             </a>
-            <p className="text-sm leading-relaxed text-zinc-400">
-              Software peruano para negocios peruanos.
+            <p className="text-sm leading-relaxed text-zinc-400 mb-4">
+              Software peruano para negocios peruanos.<br />
+              Operando desde Huánuco para todo el Perú.
             </p>
+          </div>
+
+          {/* Links */}
+          <div>
+            <h4 className="text-white text-sm font-semibold mb-4">Navegación</h4>
+            <ul className="space-y-2.5">
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href} className="text-sm text-zinc-400 hover:text-white transition-colors duration-150">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Servicios */}
@@ -37,10 +61,7 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {serviceLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-zinc-400 hover:text-white transition-colors duration-150"
-                  >
+                  <a href={link.href} className="text-sm text-zinc-400 hover:text-white transition-colors duration-150">
                     {link.label}
                   </a>
                 </li>
@@ -48,43 +69,30 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Empresa */}
+          {/* Empresa + Contacto */}
           <div>
             <h4 className="text-white text-sm font-semibold mb-4">Empresa</h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2.5 mb-6">
               {companyLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-zinc-400 hover:text-white transition-colors duration-150"
-                  >
+                  <a href={link.href} className="text-sm text-zinc-400 hover:text-white transition-colors duration-150">
                     {link.label}
                   </a>
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Contacto */}
-          <div>
-            <h4 className="text-white text-sm font-semibold mb-4">Contacto</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li className="flex items-center gap-2">
-                <span>📱</span>
-                <a
-                  href={buildWhatsAppUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-zinc-400 hover:text-white transition-colors"
-                >
-                    WhatsApp: +51 970 435 903
+            <h4 className="text-white text-sm font-semibold mb-3">Contacto</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href={buildWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5">
+                  <span>📱</span> +51 970 435 903
                 </a>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-1.5">
                 <span>📧</span>
-                <span className="text-zinc-400">tec_johanabad@abadgroup.tech</span>
+                <span className="text-zinc-400 break-all">tec_johanabad@abadgroup.tech</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-1.5">
                 <span>📍</span>
                 <span className="text-zinc-400">Huánuco, Perú</span>
               </li>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Check, X as XIcon } from 'lucide-react';
 import type { PlanData } from '@/types';
+import { trackEvent } from '@/lib/tracking';
 
 interface PricingCardProps {
   plan: PlanData;
@@ -106,6 +107,7 @@ export default function PricingCard({ plan, isAnnual, index }: PricingCardProps)
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Solicitar ${plan.name}`}
+        onClick={() => trackEvent('WHATSAPP_CLICK', `Pricing_${plan.name.replace(/\s+/g, '_')}`)}
         className={`w-full py-3 px-6 rounded-xl font-semibold text-sm text-center transition-all duration-200 block
           ${isDark
             ? 'bg-emerald-500 text-white hover:bg-emerald-400'
