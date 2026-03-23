@@ -77,16 +77,16 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  WhatsApp: +51 999 999 999
+                    WhatsApp: +51 970 435 903
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <span>📧</span>
-                <span className="text-zinc-400">hola@techmype.pe</span>
+                <span className="text-zinc-400">tec_johanabad@abadgroup.tech</span>
               </li>
               <li className="flex items-center gap-2">
                 <span>📍</span>
-                <span className="text-zinc-400">Lima, Perú (servicio nacional)</span>
+                <span className="text-zinc-400">Huánuco, Perú</span>
               </li>
             </ul>
           </div>
