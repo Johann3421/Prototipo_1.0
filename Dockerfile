@@ -5,7 +5,8 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 
 # Instalar certificados para fetch de Google Fonts en build
-RUN apk add --no-cache libc6-compat ca-certificates
+# openssl: necesario para que Prisma detecte linux-musl-openssl-3.0.x (Alpine 3.17+)
+RUN apk add --no-cache libc6-compat ca-certificates openssl
 
 COPY package.json package-lock.json* ./
 RUN npm ci
@@ -15,6 +16,9 @@ RUN npm ci
 # ──────────────────────────────────────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+# openssl requerido para que prisma generate use el binario correcto (linux-musl-openssl-3.0.x)
+RUN apk add --no-cache openssl
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -45,6 +49,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# openssl: Prisma requiere libssl.so.3 en Alpine 3.17+ (OpenSSL 3.0)
+RUN apk add --no-cache openssl
+
 # Usuario no-root por seguridad
 RUN addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
@@ -53,6 +60,11 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copiar los binarios de Prisma explícitamente (la traza de archivos de Next.js
+# no siempre incluye .so.node nativos en modo standalone)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
 USER nextjs
 
